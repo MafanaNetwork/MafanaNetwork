@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 
 public class TabListPacket implements PacketSender {
 
-    private final TablistTemplate tablistTemplate;
+    private final TabListTemplate tablistTemplate;
     private final ProtocolManager manager = ProtocolLibrary.getProtocolManager();
     private final PacketContainer packet;
 
-    protected TabListPacket(TablistTemplate tablistTemplate) {
+    protected TabListPacket(TabListTemplate tablistTemplate) {
         this.packet = this.manager.createPacket(PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
         this.tablistTemplate = tablistTemplate;
     }

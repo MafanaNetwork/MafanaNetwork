@@ -8,7 +8,6 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
-import me.tahacheji.mafana.loaders.ConfigLoader;
 import me.tahacheji.mafana.util.VersionUtil;
 import org.bukkit.entity.Player;
 
@@ -17,21 +16,21 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-public class TablistAddPlayerPacket implements PacketSender {
+public class TabListAddPlayerPacket implements PacketSender {
 
     private final PacketContainer packet;
     private final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
 
-    public TablistAddPlayerPacket(List<Player> playersToAdd) {
+    public TabListAddPlayerPacket(List<Player> playersToAdd) {
         this.packet = protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
         List<PlayerInfoData> playerInfoDataList = new ArrayList<>();
         for (Player player : playersToAdd) {
             playerInfoDataList.add(
-                    new PlayerInfoData(WrappedGameProfile.fromPlayer(player), ConfigLoader.getDefaultLatency().getLatency(), EnumWrappers.NativeGameMode.fromBukkit(player.getGameMode()), WrappedChatComponent.fromText(player.getDisplayName()))
+                    new PlayerInfoData(WrappedGameProfile.fromPlayer(player), 20, EnumWrappers.NativeGameMode.fromBukkit(player.getGameMode()), WrappedChatComponent.fromText(player.getDisplayName()))
             );
         }
-        if (VersionUtil.isNewTablist()) {
+        if (VersionUtil.isNewTabList()) {
             EnumSet<EnumWrappers.PlayerInfoAction> actions = EnumSet.of(
                     EnumWrappers.PlayerInfoAction.ADD_PLAYER,
                     EnumWrappers.PlayerInfoAction.UPDATE_LATENCY,
@@ -47,7 +46,7 @@ public class TablistAddPlayerPacket implements PacketSender {
         packet.getPlayerInfoDataLists().write(0, playerInfoDataList);
     }
 
-    public TablistAddPlayerPacket(Player player) {
+    public TabListAddPlayerPacket(Player player) {
         this(Collections.singletonList(player));
     }
 

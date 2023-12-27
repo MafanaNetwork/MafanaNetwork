@@ -7,20 +7,20 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 
-public class TablistHandler {
+public class TabListHandler {
 
-    private final HashMap<Player, Tablist> tablistHashMap = new HashMap<>();
+    private final HashMap<Player, TabList> tablistHashMap = new HashMap<>();
     private final JavaPlugin plugin;
 
     private long updatePeriod = 20;
     private BukkitTask task;
 
-    public TablistHandler(JavaPlugin plugin) {
+    public TabListHandler(JavaPlugin plugin) {
         this.plugin = plugin;
         start();
     }
 
-    public TablistHandler(JavaPlugin plugin, long updatePeriod) {
+    public TabListHandler(JavaPlugin plugin, long updatePeriod) {
         this(plugin);
         this.updatePeriod = updatePeriod;
     }
@@ -39,14 +39,14 @@ public class TablistHandler {
         this.task = new BukkitRunnable() {
             @Override
             public void run() {
-                tablistHashMap.forEach((player, tablist) -> tablist.getPacket().sendPacketOnce(player));
+                tablistHashMap.forEach((player, tabList) -> tabList.getPacket().sendPacketOnce(player));
             }
         }.runTaskTimer(this.plugin, 0, updatePeriod); // every second
     }
 
 
-    public void setPlayerTablist(Player player, TablistTemplate template) {
-        tablistHashMap.put(player, new Tablist(template));
+    public void setPlayerTabList(Player player, TabListTemplate template) {
+        tablistHashMap.put(player, new TabList(template));
     }
 
 

@@ -1,4 +1,4 @@
-package me.tahacheji.mafana.packets.skin;
+package me.tahacheji.mafana.packets.fakePlayer;
 
 import org.bukkit.OfflinePlayer;
 

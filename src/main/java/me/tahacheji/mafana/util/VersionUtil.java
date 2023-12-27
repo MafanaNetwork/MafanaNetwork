@@ -10,7 +10,7 @@ public class VersionUtil {
 
     private static final MinecraftVersion tablistBreakingChange = MinecraftVersion.fromServerVersion("3632-Spigot-d90018e-d67777f (MC: 1.19.3)");
 
-    public static boolean isNewTablist() {
+    public static boolean isNewTabList() {
         return ProtocolLibrary.getProtocolManager().getMinecraftVersion().isAtLeast(tablistBreakingChange);
     }
 

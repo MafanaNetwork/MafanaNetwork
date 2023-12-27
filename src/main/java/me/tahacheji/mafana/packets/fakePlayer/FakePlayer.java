@@ -6,24 +6,33 @@ import java.util.UUID;
 
 public class FakePlayer {
 
-    private final TablistAddFakePlayerPacket tablistAddPacket;
-    private final TablistRemoveFakePlayerPacket tablistRemovePacket;
+    private final TabListAddFakePlayerPacket tablistAddPacket;
+    private final TabListRemoveFakePlayerPacket tablistRemovePacket;
+
 
     public FakePlayer(String name, String displayName) {
         UUID fakeUUID = UUID.randomUUID();
-        this.tablistAddPacket = new TablistAddFakePlayerPacket(fakeUUID, name, displayName);
-        this.tablistRemovePacket = new TablistRemoveFakePlayerPacket(fakeUUID, name, displayName);
+        this.tablistAddPacket = new TabListAddFakePlayerPacket(fakeUUID, name, displayName);
+        this.tablistRemovePacket = new TabListRemoveFakePlayerPacket(fakeUUID, name, displayName);
+    }
+
+    public FakePlayer(String name, String displayName, SkinType skinType) {
+        UUID fakeUUID = UUID.randomUUID();
+        this.tablistAddPacket = new TabListAddFakePlayerPacket(fakeUUID, name, displayName, skinType);
+        this.tablistRemovePacket = new TabListRemoveFakePlayerPacket(fakeUUID, name, displayName, skinType);
     }
 
     public FakePlayer(String name) {
         this(name, " ");
     }
 
-    public TablistAddFakePlayerPacket getTablistAddPacket() {
+
+
+    public TabListAddFakePlayerPacket getTablistAddPacket() {
         return tablistAddPacket;
     }
 
-    public TablistRemoveFakePlayerPacket getTablistRemovePacket() {
+    public TabListRemoveFakePlayerPacket getTablistRemovePacket() {
         return tablistRemovePacket;
     }
 

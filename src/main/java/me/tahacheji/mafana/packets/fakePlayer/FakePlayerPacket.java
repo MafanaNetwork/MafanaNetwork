@@ -45,6 +45,12 @@ public class FakePlayerPacket implements PacketSender {
         return profile;
     }
 
+    public static WrappedGameProfile changeGameProfileSkin(WrappedGameProfile profile, String signature, String texture)
+    {
+        profile.getProperties().put("textures", new WrappedSignedProperty("textures", texture,signature));
+        return profile;
+    }
+
     public UUID getUuid() {
         return uuid;
     }

@@ -1,10 +1,10 @@
 package me.tahacheji.mafana.packets;
 
-public class Tablist {
+public class TabList {
 
     private final PacketSender packet;
 
-    protected Tablist(TablistTemplate template) {
+    protected TabList(TabListTemplate template) {
         this.packet = new TabListPacket(template);
     }
 

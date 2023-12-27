@@ -1,4 +1,4 @@
-package me.tahacheji.mafana.packets.fakePlayer;
+package me.tahacheji.mafana.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -30,11 +30,15 @@ public class SkinUtil {
         final URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", "") + "?unsigned=false");
         final JsonObject json = new JsonParser().parse(new InputStreamReader(url.openStream())).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
 
-        return cache.put(uuid, new String[]{
+        String[] data = new String[]{
                 json.get("value").getAsString(),
                 json.get("signature").getAsString()
-        });
+        };
+
+        cache.put(uuid, data);  // Store the data in the cache
+        return data;
     }
+
 
     public static String[] getSkinDataThrown(UUID uuid) {
         try {
@@ -46,16 +50,25 @@ public class SkinUtil {
         return null;
     }
 
+    public static SkinType getPlayerSkin(UUID uuid) {
+        String[] x = getSkinDataThrown(uuid);
+        if (x != null) {
+            String texture = x[0];
+            String signature = x[1];
+            if (texture != null && signature != null) {
+                return new SkinType(signature, texture);
+            } else {
+                System.out.println("Texture or signature is null!");
+            }
+        }
+        return null;
+    }
+
     public static SkinType getPlayerSkin(OfflinePlayer player) {
         String[] x = getSkinDataThrown(player.getUniqueId());
         if (x != null) {
             String texture = x[0];
             String signature = x[1];
-
-            System.out.println("Texture: " + texture);
-            System.out.println("Signature: " + signature);
-
-            // Add a null check before creating SkinType
             if (texture != null && signature != null) {
                 return new SkinType(signature, texture);
             } else {

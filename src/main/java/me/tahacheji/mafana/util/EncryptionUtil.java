@@ -1,11 +1,10 @@
-package me.tahacheji.mafana.processor;
+package me.tahacheji.mafana.util;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,22 +13,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class EncryptionUtil {
-    private final String ALGORITHM = "AES";
-    private final String CIPHER_INSTANCE = "AES/ECB/PKCS5Padding";
-    private final Key SECRET_KEY;
-    public EncryptionUtil() {
-        SECRET_KEY = getSecretKey("mafana");
-    }
-
-    private static final String HASH_ALGORITHM = "SHA-256";
-
-
     public UUID stringToUUID(String input) {
         try {
-            MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(input.getBytes(StandardCharsets.UTF_8));
 
             // Convert the hash bytes to a UUID
@@ -49,20 +41,6 @@ public class EncryptionUtil {
         }
     }
 
-    private Key getSecretKey(String keyString) {
-        // Generate a secret key from the provided keyString
-        byte[] keyBytes = Arrays.copyOf(keyString.getBytes(StandardCharsets.UTF_8), 16); // AES keys are 128 bits (16 bytes)
-        return new SecretKeySpec(keyBytes, ALGORITHM);
-    }
-
-    public String encodeItem(ItemStack item) {
-        return itemToBase64(item);
-    }
-
-    public ItemStack decodeItems(String data) throws Exception {
-        return itemFromBase64(data);
-    }
-
     public String itemToBase64(ItemStack item) throws IllegalStateException {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -79,9 +57,15 @@ public class EncryptionUtil {
         }
     }
 
-    public ItemStack itemFromBase64(String data) throws IOException {
+    public ItemStack itemFromBase64(String data) {
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+            byte[] bytes = Base64Coder.decodeLines(data);
+            if (bytes == null || bytes.length == 0) {
+                // Handle invalid or empty data here
+                return null;
+            }
+
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 
             // Read the serialized item
@@ -89,8 +73,53 @@ public class EncryptionUtil {
 
             dataInput.close();
             return item;
+        } catch (IOException | ClassNotFoundException e) {
+            // Handle exceptions here, e.g., log the error or return a default ItemStack
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String itemStackListToBase64(List<ItemStack> items) throws IllegalStateException {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+
+            // Write the size of the list
+            dataOutput.writeInt(items.size());
+
+            // Save every element in the list
+            for (ItemStack item : items) {
+                dataOutput.writeObject(item);
+            }
+
+            // Serialize that list
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to save item stacks.", e);
+        }
+    }
+
+    public List<ItemStack> decodeItems(String data) throws Exception {
+        try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            List<ItemStack> items = new ArrayList<>();
+
+            // Read the serialized list
+            int itemCount = dataInput.readInt();
+            for (int i = 0; i < itemCount; i++) {
+                ItemStack item = (ItemStack) dataInput.readObject();
+                items.add(item);
+            }
+
+            dataInput.close();
+            return items;
         } catch (ClassNotFoundException e) {
             throw new IOException("Unable to decode class type.", e);
         }
     }
+
+
 }

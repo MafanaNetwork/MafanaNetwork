@@ -1,11 +1,8 @@
-package me.TahaCheji.gameSystem.gameUtil;
+package me.tahacheji.mafana.util;
 
-import de.tr7zw.nbtapi.NBTBlock;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTEntity;
 import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtinjector.NBTInjector;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,9 +36,6 @@ public class NBTUtils {
         nbt.setBoolean(key, value);
         return nbt.getItem();
     }
-
-
-
 
 
     public static String getString(ItemStack is, String key) {

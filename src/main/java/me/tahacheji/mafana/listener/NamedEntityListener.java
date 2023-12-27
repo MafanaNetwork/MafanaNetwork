@@ -5,9 +5,9 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import me.tahacheji.mafana.MafanaHub;
+import me.tahacheji.mafana.MafanaNetwork;
 import me.tahacheji.mafana.packets.PacketSender;
-import me.tahacheji.mafana.packets.TablistAddPlayerPacket;
+import me.tahacheji.mafana.packets.TabListAddPlayerPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -17,8 +17,8 @@ public class NamedEntityListener extends PacketAdapter {
 
 
 
-    public NamedEntityListener(MafanaHub manager, ListenerPriority listenerPriority, PacketType... types) {
-        super(manager.getPlugin(), listenerPriority, types);
+    public NamedEntityListener(ListenerPriority listenerPriority, PacketType... types) {
+        super(MafanaNetwork.getInstance(), listenerPriority, types);
     }
 
     @Override
@@ -28,8 +28,8 @@ public class NamedEntityListener extends PacketAdapter {
         UUID entityUUID = packet.getUUIDs().read(0);
         Player packetPlayer = Bukkit.getPlayer(entityUUID);
         if (packetPlayer != null) {
-            PacketSender tablistAddPacket = new TablistAddPlayerPacket(packetPlayer);
-            PacketSender tablistAddPacket2 = new TablistAddPlayerPacket(targetPlayer);
+            PacketSender tablistAddPacket = new TabListAddPlayerPacket(packetPlayer);
+            PacketSender tablistAddPacket2 = new TabListAddPlayerPacket(targetPlayer);
             tablistAddPacket.sendPacketOnce(targetPlayer);
             tablistAddPacket2.sendPacketOnce(packetPlayer);
         }

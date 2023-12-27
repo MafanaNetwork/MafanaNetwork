@@ -5,6 +5,6 @@ import org.bukkit.entity.Player;
 @FunctionalInterface
 public interface PlaceholderCallback {
 
-    void callback(TablistTemplate tablistTemplate, Player player);
+    void callback(TabListTemplate tablistTemplate, Player player);
 
 }

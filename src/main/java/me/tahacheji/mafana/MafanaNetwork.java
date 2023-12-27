@@ -5,98 +5,57 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 
+import me.tahacheji.mafana.itemData.GameItem;
 import me.tahacheji.mafana.listener.*;
-import me.tahacheji.mafana.packets.TablistHandler;
-import me.tahacheji.mafana.loaders.ConfigLoader;
+import me.tahacheji.mafana.manager.PlayerScoreboard;
+import me.tahacheji.mafana.packets.TabListHandler;
+import me.tahacheji.mafana.packets.TabListTemplate;
 import me.tahacheji.mafana.util.VersionUtil;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-public final class MafanaHub extends JavaPlugin {
+public final class MafanaNetwork extends JavaPlugin {
 
-    private static final String configFileName = "tablistConfig.yml";
-
-    private BukkitListener listener;
-    private TablistHandler tablistHandler;
-    private ConfigLoader configLoader;
-    private static MafanaHub instance;
-
-    private File configFile;
-
+    private TabListHandler tablistHandler;
+    private static MafanaNetwork instance;
+    private List<PlayerScoreboard> playerScoreboards = new ArrayList<>();
+    private List<TabListTemplate> tabListTemplates = new ArrayList<>();
+    private List<GameItem> gameItems = new ArrayList<>();
 
     @Override
     public void onEnable() {
         instance = this;
-        this.tablistHandler = new TablistHandler(this);
-        generateConfigFile();
-        this.configLoader = new ConfigLoader(this.configFile);
-        this.listener = new BukkitListener(this.configLoader);
+        tablistHandler = new TabListHandler(this);
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();
-        if(VersionUtil.isNewTablist()) {
-            manager.addPacketListener(new PlayerRemoveListener(this,ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO_REMOVE));
+
+        if (VersionUtil.isNewTabList()) {
+            manager.addPacketListener(new PlayerRemoveListener( ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO_REMOVE));
         }
-        manager.addPacketListener(new PlayerInfoListener(this, ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO));
-        manager.addPacketListener(new NamedEntityListener(this, ListenerPriority.NORMAL, PacketType.Play.Server.NAMED_ENTITY_SPAWN));
-        getServer().getPluginManager().registerEvents(this.listener, this);
+        manager.addPacketListener(new PlayerInfoListener(ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO));
+        manager.addPacketListener(new NamedEntityListener(ListenerPriority.NORMAL, PacketType.Play.Server.NAMED_ENTITY_SPAWN));
 
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
-
-
+        getServer().getPluginManager().registerEvents(new GameItemListener(), this);
     }
 
-    private void generateConfigFile() {
-        File dataFolder = new File(this.getDataFolder().getParentFile(), "TablistManagerAPI").getAbsoluteFile();
-        if(!dataFolder.exists()){
-            this.getLogger().info("Config folder 'TablistManagerAPI' doesn't exists. Creating one 4 ya.");
-            if(dataFolder.mkdirs()) {
-                this.getLogger().info("Config folder created");
-            } else {
-                this.getLogger().severe("Config folder couldn't be created (Do you have permissions?)") ;
-            }
-        }
-        File file = new File(dataFolder, configFileName);
-        this.configFile = file;
-        if(!file.exists()) {
-            getLogger().info("Attempting to save default config for TablistManagerAPI at " + file.getPath());
-            try {
-                InputStream fileContent = getResource(configFileName);
-                file.createNewFile();
-                FileOutputStream fs = new FileOutputStream(file.getAbsolutePath());
-                fs.write(fileContent.readAllBytes());
-                fs.close();
-            } catch (IOException e) {
-                getLogger().severe("Default config file for TablistManagerAPI couldn't be created") ;
-            }
-        }
+    public List<GameItem> getGameItems() {
+        return gameItems;
     }
 
-    public void reload() {
-        this.generateConfigFile();
-        this.configLoader.reloadFields();
-        this.listener.reloadChanges();
+    public List<TabListTemplate> getTabListTemplates() {
+        return tabListTemplates;
     }
 
-    public static MafanaHub getInstance() {
+    public List<PlayerScoreboard> getPlayerScoreboards() {
+        return playerScoreboards;
+    }
+
+    public static MafanaNetwork getInstance() {
         return instance;
     }
 
-    public JavaPlugin getPlugin() {
-        return this;
-    }
-
-    public ConfigLoader getConfigLoader() {
-        return configLoader;
-    }
-
-    /**
-     * @return An instance of the TablistHandler attached to this TablistManager instance
-     */
-    public TablistHandler getTablistHandler() {
+    public TabListHandler getTabListHandler() {
         return tablistHandler;
     }
 
