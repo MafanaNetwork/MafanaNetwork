@@ -1,0 +1,5 @@
+depend: [ ProtocolLib ]
+name: MafanaHub
+version: '${project.version}'
+main: me.tahacheji.mafana.MafanaHub
+api-version: 1.20
