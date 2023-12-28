@@ -23,6 +23,7 @@ public abstract class ScoreboardManager {
             public void run() {
                 for(PlayerScoreboard playerScoreboard : MafanaNetwork.getInstance().getPlayerScoreboards()) {
                     updateBoard(playerScoreboard.getFastBoard(), playerScoreboard.getPlayer());
+                    System.out.println(3);
                 }
             }
         }, 0, 25);
@@ -32,6 +33,7 @@ public abstract class ScoreboardManager {
         FastBoard board = new FastBoard(player);
         board.updateTitle(name);
         MafanaNetwork.getInstance().getPlayerScoreboards().add(new PlayerScoreboard(player, board));
+        System.out.println(2);
     }
 
     public void onLeave(Player player) {

@@ -23,13 +23,11 @@ public final class MafanaNetwork extends JavaPlugin {
     private List<PlayerScoreboard> playerScoreboards = new ArrayList<>();
     private List<TabListTemplate> tabListTemplates = new ArrayList<>();
     private List<GameItem> gameItems = new ArrayList<>();
-
     @Override
     public void onEnable() {
         instance = this;
         tablistHandler = new TabListHandler(this);
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();
-
         if (VersionUtil.isNewTabList()) {
             manager.addPacketListener(new PlayerRemoveListener( ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO_REMOVE));
         }
