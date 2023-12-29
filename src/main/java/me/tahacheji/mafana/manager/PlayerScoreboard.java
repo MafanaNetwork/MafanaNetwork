@@ -1,6 +1,6 @@
 package me.tahacheji.mafana.manager;
 
-import fr.mrmicky.fastboard.FastBoard;
+import me.tahacheji.mafana.scoreboard.FastBoard;
 import org.bukkit.entity.Player;
 
 public class PlayerScoreboard {
