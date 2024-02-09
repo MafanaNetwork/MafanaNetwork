@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GameItem implements GameItemEvents{
 
@@ -28,7 +29,7 @@ public class GameItem implements GameItemEvents{
         this.material = material;
         this.glow = glow;
         this.lore = lore;
-        this.itemUUID = new EncryptionUtil().stringToUUID(ChatColor.stripColor(getName())).toString();
+        this.itemUUID = UUID.randomUUID().toString();
     }
 
     public GameItem(String name, Material material, boolean glow, String... lore) {
@@ -36,7 +37,7 @@ public class GameItem implements GameItemEvents{
         this.material = material;
         this.glow = glow;
         this.lore = List.of(lore);
-        this.itemUUID = new EncryptionUtil().stringToUUID(ChatColor.stripColor(getName())).toString();
+        this.itemUUID = UUID.randomUUID().toString();
     }
 
     public ItemStack getItem() {
@@ -125,5 +126,25 @@ public class GameItem implements GameItemEvents{
 
     public List<String> getLore() {
         return lore;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public void setGlow(boolean glow) {
+        this.glow = glow;
+    }
+
+    public void setItemUUID(String itemUUID) {
+        this.itemUUID = itemUUID;
+    }
+
+    public void setLore(List<String> lore) {
+        this.lore = lore;
     }
 }
