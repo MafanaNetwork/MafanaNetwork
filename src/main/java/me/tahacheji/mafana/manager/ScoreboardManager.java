@@ -18,7 +18,7 @@ public abstract class ScoreboardManager {
     }
 
     public void updateScoreboard() {
-        Bukkit.getScheduler().runTaskTimer(MafanaNetwork.getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(MafanaNetwork.getInstance(), new Runnable() {
             @Override
             public void run() {
                 for(PlayerScoreboard playerScoreboard : MafanaNetwork.getInstance().getPlayerScoreboards()) {

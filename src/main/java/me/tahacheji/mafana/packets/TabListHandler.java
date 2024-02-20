@@ -41,7 +41,7 @@ public class TabListHandler {
             public void run() {
                 tablistHashMap.forEach((player, tabList) -> tabList.getPacket().sendPacketOnce(player));
             }
-        }.runTaskTimer(this.plugin, 0, updatePeriod); // every second
+        }.runTaskTimerAsynchronously(this.plugin, 0, updatePeriod);
     }
 
 

@@ -3,7 +3,6 @@ package me.tahacheji.mafana.listener;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import me.tahacheji.mafana.MafanaNetwork;
 import me.tahacheji.mafana.itemData.GameItem;
-import me.tahacheji.mafana.itemData.GameItemEvents;
 import me.tahacheji.mafana.util.GameItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -50,7 +49,7 @@ public class GameItemListener implements Listener {
                     }
                 }
             }
-        }.runTaskTimer(MafanaNetwork.getInstance(), 0L, 20L);
+        }.runTaskTimerAsynchronously(MafanaNetwork.getInstance(), 0L, 20L);
     }
 
     @EventHandler
