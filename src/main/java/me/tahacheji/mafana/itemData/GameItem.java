@@ -18,13 +18,15 @@ import java.util.UUID;
 
 public class GameItem implements GameItemEvents{
 
+    private final String ID;
     private String name;
     private Material material;
     private boolean glow;
     private String itemUUID;
     private List<String> lore = new ArrayList<>();
 
-    public GameItem(String name, Material material, boolean glow, List<String> lore) {
+    public GameItem(String ID, String name, Material material, boolean glow, List<String> lore) {
+        this.ID = ID;
         this.name = name;
         this.material = material;
         this.glow = glow;
@@ -32,7 +34,8 @@ public class GameItem implements GameItemEvents{
         this.itemUUID = UUID.randomUUID().toString();
     }
 
-    public GameItem(String name, Material material, boolean glow, String... lore) {
+    public GameItem(String ID, String name, Material material, boolean glow, String... lore) {
+        this.ID = ID;
         this.name = name;
         this.material = material;
         this.glow = glow;
@@ -55,6 +58,7 @@ public class GameItem implements GameItemEvents{
             meta.setLore(lore);
         }
         item.setItemMeta(meta);
+        item = NBTUtils.setString(item, "ITEM_ID", getID());
         item = NBTUtils.setString(item, "GameItemUUID", getItemUUID());
         return item;
     }
@@ -106,6 +110,10 @@ public class GameItem implements GameItemEvents{
     public boolean compare(ItemStack other) {
         String otherUUID = NBTUtils.getString(other, "GameItemUUID");
         return otherUUID.equalsIgnoreCase(itemUUID);
+    }
+
+    public String getID() {
+        return ID;
     }
 
     public String getItemUUID() {

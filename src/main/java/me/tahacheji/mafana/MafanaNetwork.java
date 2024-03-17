@@ -5,6 +5,8 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 
+import me.tahacheji.mafana.command.ItemCreateCommand;
+import me.tahacheji.mafana.commandExecutor.CommandHandler;
 import me.tahacheji.mafana.itemData.GameItem;
 import me.tahacheji.mafana.listener.*;
 import me.tahacheji.mafana.manager.PlayerScoreboard;
@@ -29,11 +31,11 @@ public final class MafanaNetwork extends JavaPlugin {
         tablistHandler = new TabListHandler(this);
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();
         if (VersionUtil.isNewTabList()) {
-            manager.addPacketListener(new PlayerRemoveListener( ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO_REMOVE));
+            manager.addPacketListener(new PlayerRemoveListener(ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO_REMOVE));
         }
         manager.addPacketListener(new PlayerInfoListener(ListenerPriority.NORMAL, PacketType.Play.Server.PLAYER_INFO));
         manager.addPacketListener(new NamedEntityListener(ListenerPriority.NORMAL, PacketType.Play.Server.NAMED_ENTITY_SPAWN));
-
+        CommandHandler.registerCommands(ItemCreateCommand.class, this);
         getServer().getPluginManager().registerEvents(new GameItemListener(), this);
     }
 
